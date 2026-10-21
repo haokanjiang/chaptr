@@ -2,7 +2,7 @@
 
 **Turn video transcripts into animated chapter timelines.**
 
-A Codex-first video chapter generator, inspired by [JZSub](https://github.com/pengchujin/jzsub) and [LiveCanvas](https://github.com/pengchujin/livecanvas). Input a video URL (or local MP4 and SRT), have the *current agent* identify meaningful topics, then render a dynamic, customizable chapter bar **below** the original video.
+**Upstream reuse:** Chaptr vendors unmodified JZSub media acquisition and subtitle parsing implementations at a pinned revision. Chaptr owns semantic chapter analysis, timeline design, and delivery only. See [upstream notice](vendor/jzsub/README.md).\n\nA Codex-first video chapter generator, inspired by [JZSub](https://github.com/pengchujin/jzsub) and [LiveCanvas](https://github.com/pengchujin/livecanvas). Input a video URL (or local MP4 and SRT), have the *current agent* identify meaningful topics, then render a dynamic, customizable chapter bar **below** the original video.
 
 ## Requirements
 
@@ -15,7 +15,7 @@ A Codex-first video chapter generator, inspired by [JZSub](https://github.com/pe
 ```bash
 git clone https://github.com/haokanjiang/chaptr.git
 cd chaptr
-python3 skills/chaptr/scripts/chaptr.py fetch "VIDEO_URL" --job jobs/demo
+python3 skills/chaptr/scripts/chaptr.py fetch "VIDEO_URL" --job jobs/demo\n# Optional: --source-lang en --browser-cookies chrome
 ```
 
 Or bring your own files:
