@@ -2,8 +2,6 @@
 
 **Turn video transcripts into animated chapter timelines.**
 
-**JZSub-derived media core:** Chaptr integrates JZSub's robust download, subtitle selection and SRT parsing directly under `skills/chaptr/scripts/` as `media_fetch.py` and `subtitle_source.py`. No vendor directory or runtime dependency on another repository. See [third-party notices](THIRD_PARTY_NOTICES.md).
-
 ## Requirements
 
 - Python 3.10+, yt-dlp, FFmpeg/ffprobe
@@ -50,4 +48,4 @@ Original SRT is not altered; timestamps are resolved from cue IDs instead of hal
 
 Use only videos you are authorized to download. Chaptr does not circumvent DRM or access restrictions.
 
-MIT license. JZSub and chapter-progress-bar are references, not vendored code.
+MIT license.

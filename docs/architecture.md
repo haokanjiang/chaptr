@@ -1,6 +1,6 @@
 # Architecture
 
-Chaptr borrows the reliable division of labor pioneered by [JZSub](https://github.com/pengchujin/jzsub): yt-dlp for extraction, Python for deterministic checks, the active coding agent for language understanding, and FFmpeg for final media delivery. The media acquisition and subtitle parsing modules are derived from JZSub, kept directly inside Chaptr and credited under MIT.
+Chaptr is a Codex-first pipeline for extracting subtitles, generating semantic chapters, and rendering an animated timeline below the original video.
 
 Agent: SRT cue batches -> semantic topic boundaries -> chapter JSON. No separate paid LLM API required.
 Deterministic core: immutable SRT hash -> cue ID references -> timestamp resolution -> validated chapter ranges.
@@ -10,7 +10,3 @@ Unlike an overlay, v0.1 pads the picture at the bottom, so original picture cont
 
 Known limitations: no ASR, no dynamic chapter-editing UI, no HDR guarantee, 1920-wide render, source subtitle language selection is simplistic, Remotion browser required. Always validate on real media before promising platform coverage.
 
-References:
-- https://github.com/pengchujin/jzsub
-- https://github.com/pengchujin/livecanvas
-- https://github.com/serenawangCU/chapter-progress-bar
