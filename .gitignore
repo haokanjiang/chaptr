@@ -1,0 +1,6 @@
+node_modules/
+out/
+jobs/
+__pycache__/
+*.pyc
+.DS_Store
