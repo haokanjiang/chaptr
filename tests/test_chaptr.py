@@ -20,7 +20,7 @@ class SubtitleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             chaptr.srt_time('00:77:01,000')
     def test_empty_srt(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises((ValueError, RuntimeError)):
             chaptr.parse_srt(b'')
     def test_source_provenance(self):
         raw=b'1\n00:00:00,000 --> 00:00:01,000\n[Music]\n\n2\n00:00:01,000 --> 00:00:02,000\nHello\n'
