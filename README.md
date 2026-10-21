@@ -2,6 +2,20 @@
 
 **Turn video transcripts into animated chapter timelines.**
 
+## Preview
+
+Chaptr turns transcript topics into concise, language-matched chapters and a full-width animated timeline.
+
+**Opening**
+
+![Generated timeline under the opening scene of a neural network video](docs/images/chaptr-preview-opening.png)
+
+**Later chapter**
+
+![Generated timeline under a later neural network chapter](docs/images/chaptr-preview-chapter.png)
+
+The previews above show output generated from the [sample video](https://www.youtube.com/watch?v=aircAruvnKk).
+
 ## Requirements
 
 - Python 3.10+, yt-dlp, FFmpeg/ffprobe
