@@ -8,18 +8,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-import importlib.util
-
-UPSTREAM = Path(__file__).resolve().parents[3] / "vendor" / "jzsub"
-
-def upstream_module(name):
-    path = UPSTREAM / f"{name}.py"
-    spec = importlib.util.spec_from_file_location(f"chaptr_jzsub_{name}", path)
-    if spec is None or spec.loader is None:
-        raise ValueError(f"Missing vendored JZSub component: {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+# The reusable JZSub media and subtitle logic lives directly in Chaptr.
+# Python executes this file's directory on sys.path for normal CLI invocation.
+import media_fetch
+import subtitle_source
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
@@ -56,7 +48,7 @@ def srt_time(text):
 
 def parse_srt(raw):
     # Reuse JZSub's strict SRT grammar, filtering and hashed Cue Ledger.
-    pipeline = upstream_module("subtitle_pipeline")
+    pipeline = subtitle_source
     parsed = pipeline.parse_srt_bytes(raw)
     ledger = pipeline._build_cue_ledger(parsed)
     if not ledger:
@@ -98,10 +90,11 @@ def fetch(url,job, browser_cookies="auto", source_lang=None):
     job.mkdir(parents=True, exist_ok=True)
     if any(job.iterdir()):
         raise ValueError("Job directory must be empty")
-    fetcher = upstream_module("fetch_video")
+    fetcher = media_fetch
     args = fetcher.build_parser().parse_args([
         url, "--output-dir", str(job / "source"),
         "--deliver", "video",
+        "--target-lang", "zz",  # No language exclusion: Chaptr needs source captions in any language.
         "--browser-cookies", browser_cookies,
         *(['--source-lang', source_lang] if source_lang else []),
     ])
@@ -134,11 +127,11 @@ def fetch(url,job, browser_cookies="auto", source_lang=None):
         raise ValueError("JZSub did not provide video and usable source SRT; Chaptr v0.2 requires subtitles")
     result = prepare(video,srt,job)
     manifest = load(job / "manifest.json")
-    manifest["jzsubManifest"] = str(Path(result).resolve()) if isinstance(result, str) else str((base / "download-manifest.json").resolve())
+    manifest["sourceDownloadManifest"] = str(Path(base / "download-manifest.json").resolve())
     manifest["subtitleLanguage"] = subtitle.get("language")
     manifest["subtitleKind"] = subtitle.get("kind")
     save(job / "manifest.json", manifest)
-    return {"upstream": "JZSub", "downloadManifest": str(base / "download-manifest.json"), **result}
+    return {"mediaCore": "JZSub-derived", "downloadManifest": str(base / "download-manifest.json"), **result}
 
 def next_batch(job):
     job=Path(job).resolve();manifest=load(job/'manifest.json')

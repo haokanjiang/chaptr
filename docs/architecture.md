@@ -1,6 +1,6 @@
 # Architecture
 
-Chaptr borrows the reliable division of labor pioneered by [JZSub](https://github.com/pengchujin/jzsub): yt-dlp for extraction, Python for deterministic checks, the active coding agent for language understanding, and FFmpeg for final media delivery. This implementation is independently written rather than copying JZSub source files.
+Chaptr borrows the reliable division of labor pioneered by [JZSub](https://github.com/pengchujin/jzsub): yt-dlp for extraction, Python for deterministic checks, the active coding agent for language understanding, and FFmpeg for final media delivery. The media acquisition and subtitle parsing modules are derived from JZSub, kept directly inside Chaptr and credited under MIT.
 
 Agent: SRT cue batches -> semantic topic boundaries -> chapter JSON. No separate paid LLM API required.
 Deterministic core: immutable SRT hash -> cue ID references -> timestamp resolution -> validated chapter ranges.
