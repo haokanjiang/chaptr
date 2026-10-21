@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/chaptr-preview-opening.png" alt="Chaptr generated animated chapter timeline beneath a neural network video" width="100%">
+  <img src="docs/assets/hero-chaptr.svg" alt="Chaptr turns video captions into concise chapters and an animated timeline MP4" width="100%">
 </p>
 
 <p align="center">
@@ -24,11 +24,14 @@ Give Chaptr a video link or local video and subtitle file. A coding agent analyz
 
 ## Preview
 
-<p align="center">
-  <img src="docs/images/chaptr-preview-chapter.png" alt="Chaptr timeline showing chapter 4 of 8, Edges, weights and bias, with proportional progress segments" width="100%">
-</p>
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/chaptr-preview-opening.png" alt="Opening scene with Chaptr chapter title and full-width progress track" width="100%"><p align="center"><sub>Opening</sub></p></td>
+    <td width="50%"><img src="docs/images/chaptr-preview-chapter.png" alt="Later chapter with proportional progress and the active title Edges, weights and bias" width="100%"><p align="center"><sub>Later chapter</sub></p></td>
+  </tr>
+</table>
 
-<p align="center"><sub>Two moments from a Chaptr output generated from <a href="https://www.youtube.com/watch?v=aircAruvnKk">3Blue1Brown's neural network video</a>.</sub></p>
+<p align="center"><sub>Output generated from <a href="https://www.youtube.com/watch?v=aircAruvnKk">3Blue1Brown's neural network video</a>.</sub></p>
 
 ## Use with Codex
 
