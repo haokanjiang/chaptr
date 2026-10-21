@@ -1,45 +1,75 @@
-# Chaptr
+<p align="center">
+  <img src="docs/images/chaptr-preview-opening.png" alt="Chaptr generated animated chapter timeline beneath a neural network video" width="100%">
+</p>
 
-**Turn video transcripts into animated chapter timelines.**
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/haokanjiang/chaptr?style=flat-square" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/Codex-Skill-111827?style=flat-square" alt="Codex Skill">
+  <img src="https://img.shields.io/badge/Remotion-Animated%20MP4-6c5ce7?style=flat-square" alt="Remotion animated MP4">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat-square" alt="Python 3.10 or newer">
+</p>
+
+<p align="center"><b>Turn a video into concise, topic-based chapters and a polished animated timeline MP4.</b></p>
+
+## What Chaptr does
+
+Give Chaptr a video link or local video and subtitle file. A coding agent analyzes the captions, finds meaningful topic changes, and renders a timeline beneath the video.
+
+- **Semantic chapters:** analyze subtitle cues in context and group related ideas into a small set of useful sections.
+- **Accurate timing:** chapter starts resolve to immutable subtitle cue IDs; media timestamps are calculated and validated by the pipeline.
+- **Language-matched titles:** chapter titles follow the selected subtitle language. When captions contain multiple languages, the agent asks which language to use.
+- **Designed timeline:** choose a restrained theme, show the active chapter and playback time, and keep the progress track aligned to the video edges.
+- **Finished MP4:** combine the original video and audio with the rendered timeline, then verify duration, dimensions, and audio.
+- **Chapter audit:** when source chapter timestamps are available, compare them with generated boundaries and summarize timing error and merged sections.
 
 ## Preview
 
-Chaptr turns transcript topics into concise, language-matched chapters and a full-width animated timeline.
+<p align="center">
+  <img src="docs/images/chaptr-preview-chapter.png" alt="Chaptr timeline showing chapter 4 of 8, Edges, weights and bias, with proportional progress segments" width="100%">
+</p>
 
-**Opening**
+<p align="center"><sub>Two moments from a Chaptr output generated from <a href="https://www.youtube.com/watch?v=aircAruvnKk">3Blue1Brown's neural network video</a>.</sub></p>
 
-![Generated timeline under the opening scene of a neural network video](docs/images/chaptr-preview-opening.png)
+## Use with Codex
 
-**Later chapter**
-
-![Generated timeline under a later neural network chapter](docs/images/chaptr-preview-chapter.png)
-
-The previews above show output generated from the [sample video](https://www.youtube.com/watch?v=aircAruvnKk).
-
-## Requirements
-
-- Python 3.10+, yt-dlp, FFmpeg/ffprobe
-- Node.js 20+, Chromium (for Remotion)
-- A coding agent (Codex/Claude Code) capable of reading/writing local files
-
-## Quick start
+### Install the skill
 
 ```bash
-git clone https://github.com/haokanjiang/chaptr.git
-cd chaptr
+npx skills add haokanjiang/chaptr --skill chaptr -g -a codex -y
+```
+
+This installs Chaptr as a global Codex skill. Start a new Codex task with a video URL:
+
+```text
+$chaptr https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+For local files, ask Codex to use the video and subtitle file:
+
+```text
+$chaptr Use /path/to/video.mp4 and /path/to/video.srt
+```
+
+The skill guides the agent through subtitle review, chapter selection, timeline styling, rendering, compositing, and output verification. The agent may ask you to choose a title language when the selected captions are multilingual.
+
+## Run the media pipeline manually
+
+Chaptr separates deterministic media processing from semantic chapter analysis. Fetch a video with existing platform captions:
+
+```bash
 python3 skills/chaptr/scripts/chaptr.py fetch "VIDEO_URL" --job jobs/demo
-# Optional: --source-lang en --browser-cookies chrome
 ```
 
-Or bring your own files:
+Or prepare local media and an SRT file:
 
 ```bash
-python3 skills/chaptr/scripts/chaptr.py prepare --video /path/to/video.mp4 --srt /path/to/video.srt --job jobs/demo
+python3 skills/chaptr/scripts/chaptr.py prepare \
+  --video /path/to/video.mp4 \
+  --srt /path/to/video.srt \
+  --job jobs/demo
 ```
 
-Ask Codex to follow [skills/chaptr/SKILL.md](skills/chaptr/SKILL.md) (or install that directory as a Codex Skill). It will process short subtitle batches and generate `chapters.json`.
-
-Then:
+Follow [the Chaptr skill](skills/chaptr/SKILL.md) to analyze the subtitle batches and write `jobs/demo/chapters.json`. Then render and verify:
 
 ```bash
 python3 skills/chaptr/scripts/chaptr.py finalize --job jobs/demo
@@ -48,18 +78,23 @@ python3 skills/chaptr/scripts/chaptr.py compose --job jobs/demo
 python3 skills/chaptr/scripts/chaptr.py verify --job jobs/demo
 ```
 
-Result: `jobs/demo/chaptr.mp4`. Customize styles with `jobs/demo/timeline-design.json` (see [design contract](skills/chaptr/references/design.md)). Includes built-in tech/travel/game/minimal palettes; the agent may propose its own colors.
+The verified result is `jobs/demo/chaptr.mp4`. The separate timeline render is `jobs/demo/timeline.mp4`.
 
-Run Python unit tests:
+## Design and chapter guidance
 
-```bash
-python3 -m unittest discover -s tests -v
-```
+The built-in themes are `tech`, `travel`, `game`, and `minimal`. Customize the palette and motion in `jobs/demo/timeline-design.json`; see the [design contract](skills/chaptr/references/design.md).
 
-## Principles
+For a 10–30 minute video, Chaptr aims for 6–8 chapters and merges adjacent subtopics that form one continuous explanation. Chapter titles stay short, match the subtitle language, and appear in a single active-title header above the proportional progress track.
 
-Original SRT is not altered; timestamps are resolved from cue IDs instead of hallucinated by the model. Deterministic media tools handle transcoding and validation. The current agent handles creative chapter choices and optional visual art direction. The earliest version intentionally avoids a Web backend, subscriptions, databases and an external translation API.
+## Requirements and limits
 
-Use only videos you are authorized to download. Chaptr does not circumvent DRM or access restrictions.
+- Python 3.10+, yt-dlp, FFmpeg, and ffprobe
+- Node.js 20+ and Chromium for Remotion rendering
+- A coding agent that can read and write local files
+- Existing platform captions for URL downloads; automatic speech recognition is not included
 
-MIT license.
+Chaptr re-encodes video to composite the timeline and preserves source audio when compatible. HDR retention is not guaranteed. Only download content you are authorized to save; Chaptr does not bypass DRM or access controls.
+
+## License
+
+[MIT](LICENSE)
